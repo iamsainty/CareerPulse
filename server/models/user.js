@@ -22,13 +22,13 @@ const userSchema = new mongoose.Schema({
   },
   jobType: {
     type: String,
-    enum: ["Remote", "Hybrid", "On-site"],
+    enum: ["Remote", "Hybrid", "Onsite"],
   },
   createdAt: {
     type: Date,
   },
 });
 
-const User = mongoose.model("User", userSchema);
+const User = mongoose.models.User || mongoose.model("User", userSchema);
 
 module.exports = User;

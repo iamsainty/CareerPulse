@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { useUserAuth } from "@/context/userAuth";
 import { useRouter } from "next/navigation";
@@ -12,9 +12,11 @@ export default function SignIn() {
   const { user } = useUserAuth();
   const router = useRouter();
 
-  if (user) {
-    router.push("/dashboard");
-  }
+  useEffect(() => {
+    if (user) {
+      router.push("/dashboard");
+    }
+  }, [user, router]);
 
   const [formData, setFormData] = useState({
     email: "",

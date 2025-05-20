@@ -7,9 +7,10 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-
+import { useUserProfile } from "@/context/userProfile";
 const EditProfile = () => {
   const { user, fetchUser } = useUserAuth();
+  const { updateProfile } = useUserProfile();
   const router = useRouter();
 
   const [formData, setFormData] = useState({
@@ -17,7 +18,9 @@ const EditProfile = () => {
     email: user?.email || "",
     location: user?.location || "",
     yearsOfExperience: user?.yearsOfExperience || "",
-    skills: user?.skills || "",
+    skills: Array.isArray(user?.skills)
+      ? user.skills.join(", ")
+      : user?.skills || "",
     jobType: user?.jobType || "",
   });
 
@@ -26,35 +29,76 @@ const EditProfile = () => {
   useEffect(() => {
     if (token) {
       fetchUser();
-      if (!user) router.push("/signin");
     } else {
       router.push("/signin");
     }
-  }, [user, router, fetchUser, token]);
+  }, [token]);
 
-  if (!user) return null;
+  useEffect(() => {
+    if (token && user === null) {
+      router.push("/signin");
+    }
+  }, [user, token]);
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const { name, location, yearsOfExperience, skills, jobType } = formData;
 
-    if (!name || !location || !yearsOfExperience || !skills || !jobType) {
-      toast.error("All fields are required.");
+    if (
+      !name.trim() ||
+      !location.trim() ||
+      !yearsOfExperience ||
+      !skills.trim() ||
+      !jobType
+    ) {
+      toast.error("Please fill in all the required fields.");
       return;
     }
 
-    if (Number(yearsOfExperience) < 0) {
-      toast.error("Years of experience must be a positive number.");
+    // Validate experience is a number and non-negative
+    const experienceNum = Number(yearsOfExperience);
+    if (isNaN(experienceNum) || experienceNum < 0) {
+      toast.error("Years of experience must be a valid non-negative number.");
       return;
     }
 
-    toast.success("Profile updated successfully!");
-    // Your API call or state update logic here
+    // Clean and validate skills
+    const skillArray = skills
+      .split(",")
+      .map((skill) => skill.trim())
+      .filter((skill) => skill.length > 0);
+
+    if (skillArray.length === 0) {
+      toast.error("Please enter at least one skill.");
+      return;
+    }
+
+    try {
+      const response = await updateProfile(
+        name.trim(),
+        location.trim(),
+        experienceNum,
+        skillArray,
+        jobType
+      );
+
+      if (response === "Profile updated successfully!") {
+        toast.success("Your profile has been updated");
+        router.push("/dashboard");
+      } else {
+        toast.error(
+          response || "Something went wrong while updating your profile."
+        );
+      }
+    } catch (error) {
+      console.error("Update profile error:", error);
+      toast.error("An unexpected error occurred. Please try again.");
+    }
   };
 
   return (
     <section className="container mx-auto flex flex-col items-center justify-center max-w-[90%] md:w-1/2 bg-white rounded-2xl p-8 md:px-16 shadow-lg space-y-8">
       <div className="w-full text-left">
-        <h1 className="text-3xl font-bold text-gray-800">Edit Profile</h1>
+        <h1 className="text-3xl font-bold ">Edit Profile</h1>
         <p className="text-sm text-muted-foreground mt-1">
           Update your personal and professional details
         </p>

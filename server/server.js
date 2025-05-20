@@ -9,6 +9,7 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 
 const userAuthRoutes = require("./routes/userAuth");
+const userProfileRoutes = require("./routes/userProfile");
 
 app.use(
   cors({
@@ -22,6 +23,7 @@ app.use(cookieParser());
 connectToMongo();
 
 app.use("/user-auth", userAuthRoutes);
+app.use("/user-profile", userProfileRoutes);
 app.get("/", (req, res) => {
   res.send("Backend is running...");
 });

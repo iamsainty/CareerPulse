@@ -10,7 +10,7 @@ const PORT = process.env.PORT || 3001;
 
 const userAuthRoutes = require("./routes/userAuth");
 const userProfileRoutes = require("./routes/userProfile");
-
+const getJobsRoutes = require("./routes/getJobs");
 app.use(
   cors({
     origin: "http://localhost:3000",
@@ -24,6 +24,7 @@ connectToMongo();
 
 app.use("/user-auth", userAuthRoutes);
 app.use("/user-profile", userProfileRoutes);
+app.use("/jobs", getJobsRoutes);
 app.get("/", (req, res) => {
   res.send("Backend is running...");
 });

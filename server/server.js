@@ -2,7 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
 const cookieParser = require("cookie-parser");
-
+const connectToMongo = require("./lib/connectMongo");
 dotenv.config();
 
 const app = express();
@@ -16,6 +16,8 @@ app.use(
 );
 app.use(express.json());
 app.use(cookieParser());
+
+connectToMongo();
 
 app.get("/", (req, res) => {
   res.send("Backend is running...");

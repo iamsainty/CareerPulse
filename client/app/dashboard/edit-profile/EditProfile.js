@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useUserProfile } from "@/context/userProfile";
 const EditProfile = () => {
-  const { user, fetchUser } = useUserAuth();
+  const { user } = useUserAuth();
   const { updateProfile } = useUserProfile();
   const router = useRouter();
 
@@ -24,21 +24,22 @@ const EditProfile = () => {
     jobType: user?.jobType || "",
   });
 
-  const token = typeof window !== "undefined" && localStorage.getItem("token");
-
   useEffect(() => {
-    if (token) {
-      fetchUser();
+    if (!user) {
+      router.push("/signin");
     } else {
-      router.push("/signin");
+      setFormData({
+        name: user.name || "",
+        email: user.email || "",
+        location: user.location || "",
+        yearsOfExperience: user.yearsOfExperience || "",
+        skills: Array.isArray(user.skills)
+          ? user.skills.join(", ")
+          : user.skills || "",
+        jobType: user.jobType || "",
+      });
     }
-  }, [token]);
-
-  useEffect(() => {
-    if (token && user === null) {
-      router.push("/signin");
-    }
-  }, [user, token]);
+  }, [user]);
 
   const handleSubmit = async () => {
     const { name, location, yearsOfExperience, skills, jobType } = formData;
@@ -81,9 +82,11 @@ const EditProfile = () => {
         jobType
       );
 
-      if (response === "Profile updated successfully!") {
+      if (response === "Profile updated successfully") {
         toast.success("Your profile has been updated");
-        router.push("/dashboard");
+        setTimeout(() => {
+          router.push("/dashboard");
+        }, 1000);
       } else {
         toast.error(
           response || "Something went wrong while updating your profile."

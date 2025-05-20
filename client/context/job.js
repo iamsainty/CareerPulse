@@ -1,0 +1,41 @@
+"use client";
+
+import { useContext, createContext, useState, useEffect } from "react";
+
+const JobContext = createContext();
+
+export const JobProvider = ({ children }) => {
+  const [jobs, setJobs] = useState([]);
+
+  const serverUrl = "http://localhost:3001";
+
+  useEffect(() => {
+    fetchJobs();
+  }, []);
+
+  const fetchJobs = async () => {
+    try {
+      const response = await fetch(`${serverUrl}/jobs/getJobs`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          token: localStorage.getItem("token"),
+        },
+      });
+      const data = await response.json();
+      setJobs(data.jobs);
+    } catch (error) {
+      console.error("Error fetching jobs:", error);
+    }
+  };
+
+  return (
+    <JobContext.Provider value={{ jobs, fetchJobs }}>
+      {children}
+    </JobContext.Provider>
+  );
+};
+
+const useJob = () => useContext(JobContext);
+
+export default useJob;

@@ -3,7 +3,7 @@ import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import { UserAuthProvider } from "@/context/userAuth";
 import { UserProfileProvider } from "@/context/userProfile";
-
+import { JobProvider } from "@/context/job";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -27,8 +27,10 @@ export default function RootLayout({ children }) {
       >
         <UserAuthProvider>
           <UserProfileProvider>
-            {children}
-            <Toaster />
+            <JobProvider>
+              {children}
+              <Toaster />
+            </JobProvider>
           </UserProfileProvider>
         </UserAuthProvider>
       </body>

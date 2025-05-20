@@ -2,10 +2,11 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useUserAuth } from "@/context/userAuth";
 import Link from "next/link";
 import { useState } from "react";
 import { toast } from "sonner";
-
+import { useRouter } from "next/navigation";
 export default function SignUp() {
   const [formData, setFormData] = useState({
     name: "",
@@ -15,11 +16,13 @@ export default function SignUp() {
   });
 
   const validateEmail = (email) => {
-    // Simple regex for email validation
     return /\S+@\S+\.\S+/.test(email);
   };
 
-  const handleSubmit = () => {
+  const { signup } = useUserAuth();
+  const router = useRouter();
+
+  const handleSubmit = async () => {
     const { name, email, password, confirmPassword } = formData;
 
     if (!name.trim()) {
@@ -48,13 +51,17 @@ export default function SignUp() {
     }
 
     if (password !== confirmPassword) {
-      toast.error("Passwords do not match");
+      toast.error("Passwords do not match"); 
       return;
     }
 
-    // If all validations pass, proceed (for now log to console)
-    console.log("Form Data is valid:", formData);
-    toast.success("Form validated! Implement signup logic next.");
+    const signupResponse = await signup(name, email, password);
+    if (signupResponse === "Account created successfully") {
+      toast.success("Account created successfully");
+      router.push("/dashboard");
+    } else {
+      toast.error(signupResponse);
+    }
   };
 
   return (
@@ -97,7 +104,7 @@ export default function SignUp() {
           }
         />
 
-        <Button className="w-full mt-2" onClick={handleSubmit}>
+        <Button className="w-full mt-2 cursor-pointer" onClick={handleSubmit}>
           Sign Up
         </Button>
 

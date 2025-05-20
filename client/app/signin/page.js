@@ -5,6 +5,8 @@ import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { useState } from "react";
 import { toast } from "sonner";
+import { useUserAuth } from "@/context/userAuth";
+import { useRouter } from "next/navigation";  
 
 export default function SignIn() {
   const [formData, setFormData] = useState({
@@ -12,11 +14,14 @@ export default function SignIn() {
     password: "",
   });
 
+  const { signin } = useUserAuth();
+  const router = useRouter();
+
   const validateEmail = (email) => {
     return /\S+@\S+\.\S+/.test(email);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const { email, password } = formData;
 
     if (!email.trim()) {
@@ -34,9 +39,13 @@ export default function SignIn() {
       return;
     }
 
-    // If all validations pass, proceed (for now log to console)
-    console.log("Login Form Data:", formData);
-    toast.success("Login validated! Implement login logic next.");
+    const signinResponse = await signin(email, password);
+    if (signinResponse === "Signed in successfully") {
+      toast.success("Signed in successfully");
+      router.push("/dashboard");
+    } else {
+      toast.error(signinResponse);
+    }
   };
 
   return (

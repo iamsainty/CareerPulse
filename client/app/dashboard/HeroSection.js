@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import Image from "next/image";
 import heroImage from "@/public/dashboard-hero-image.png";
+import Link from "next/link";
 
 const HeroSection = () => {
   const { user } = useUserAuth();
@@ -48,16 +49,20 @@ const HeroSection = () => {
         </p>
 
         <div className="flex flex-wrap justify-center md:justify-start gap-3 pt-2">
-          <Button className="bg-blue-500 hover:bg-blue-600 text-white text-base cursor-pointer">
-            {isComplete ? "Update Profile" : "Complete Profile"}
-          </Button>
-          {isComplete && (
-            <Button
-              variant="secondary"
-              className="border border-blue-300 text-blue-900 text-base cursor-pointer"
-            >
-              Find Jobs with AI
+          <Link href="/dashboard/edit-profile">
+            <Button className="bg-blue-500 hover:bg-blue-600 text-white text-base cursor-pointer">
+              {isComplete ? "Update Profile" : "Complete Profile"}
             </Button>
+          </Link>
+          {isComplete && (
+            <Link href="/dashboard/jobs">
+              <Button
+                variant="secondary"
+                className="border border-blue-300 text-blue-900 text-base cursor-pointer"
+              >
+                Find Jobs with AI
+              </Button>
+            </Link>
           )}
         </div>
       </div>

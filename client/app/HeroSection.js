@@ -2,10 +2,15 @@
 
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
+import { useUserAuth } from "@/context/userAuth";
 import React from "react";
 
 const HeroSection = () => {
   const router = useRouter();
+  const { user } = useUserAuth();
+  if (user) {
+    router.push("/dashboard");
+  }
 
   return (
     <section className="flex flex-col items-center justify-center text-center px-4 sm:px-8 py-24 w-full h-full max-w-5xl mx-auto">

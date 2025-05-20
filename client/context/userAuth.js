@@ -26,6 +26,7 @@ export const UserAuthProvider = ({ children }) => {
         body: JSON.stringify({ name, email, password }),
       });
       const data = await response.json();
+      localStorage.setItem("token", data.token);
       return data.message;
     } catch (error) {
       console.error("Signup error:", error);
@@ -43,6 +44,7 @@ export const UserAuthProvider = ({ children }) => {
         body: JSON.stringify({ email, password }),
       });
       const data = await response.json();
+      localStorage.setItem("token", data.token);
       return data.message;
     } catch (error) {
       console.error("Signin error:", error);
@@ -56,6 +58,7 @@ export const UserAuthProvider = ({ children }) => {
         method: "POST",
       });
       const data = await response.json();
+      localStorage.removeItem("token");
       return data.message;
     } catch (error) {
       console.error("Signout error:", error);
@@ -68,6 +71,7 @@ export const UserAuthProvider = ({ children }) => {
       const response = await fetch(`${serverUrl}/user-auth/fetch-user`, {
         headers: {
           "Content-Type": "application/json",
+          token: localStorage.getItem("token"),
         },
       });
       const data = await response.json();

@@ -21,11 +21,8 @@ router.post("/signup", async (req, res) => {
     await newUser.save();
 
     const token = jwt.sign({ userId: newUser._id }, process.env.JWT_SECRET);
-    res.cookie("token", token, {
-      maxAge: 30 * 24 * 60 * 60 * 1000,
-    });
 
-    res.status(201).json({ message: "Account created successfully" });
+    res.status(201).json({ message: "Account created successfully", token });
   } catch (error) {
     res.status(500).json({ message: "Internal server error" });
   }
@@ -49,24 +46,19 @@ router.post("/signin", async (req, res) => {
 
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET);
 
-    res.cookie("token", token, {
-      maxAge: 30 * 24 * 60 * 60 * 1000,
-    });
-
-    res.status(200).json({ message: "Signed in successfully" });
+    res.status(200).json({ message: "Signed in successfully", token });
   } catch (error) {
     res.status(500).json({ message: "Internal server error" });
   }
 });
 
 router.post("/signout", (req, res) => {
-  res.clearCookie("token");
   res.status(200).json({ message: "Signed out successfully" });
 });
 
 router.get("/fetch-user", async (req, res) => {
   try {
-    const token = req.cookies.token;
+    const token = req.headers.token;
     if (!token) {
       return res.status(401).json({ message: "Unauthorized" });
     }

@@ -8,6 +8,13 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 export default function SignUp() {
+  const { user } = useUserAuth();
+  const router = useRouter();
+
+  if (user) {
+    router.push("/dashboard");
+  }
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -20,7 +27,6 @@ export default function SignUp() {
   };
 
   const { signup } = useUserAuth();
-  const router = useRouter();
 
   const handleSubmit = async () => {
     const { name, email, password, confirmPassword } = formData;
@@ -51,7 +57,7 @@ export default function SignUp() {
     }
 
     if (password !== confirmPassword) {
-      toast.error("Passwords do not match"); 
+      toast.error("Passwords do not match");
       return;
     }
 

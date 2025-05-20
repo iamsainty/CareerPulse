@@ -6,16 +6,22 @@ import Link from "next/link";
 import { useState } from "react";
 import { toast } from "sonner";
 import { useUserAuth } from "@/context/userAuth";
-import { useRouter } from "next/navigation";  
+import { useRouter } from "next/navigation";
 
 export default function SignIn() {
+  const { user } = useUserAuth();
+  const router = useRouter();
+
+  if (user) {
+    router.push("/dashboard");
+  }
+
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
 
   const { signin } = useUserAuth();
-  const router = useRouter();
 
   const validateEmail = (email) => {
     return /\S+@\S+\.\S+/.test(email);

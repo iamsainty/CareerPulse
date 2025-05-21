@@ -33,10 +33,10 @@ const JobListing = () => {
   const skeletonArray = Array.from({ length: 3 });
 
   return (
-    <section className="flex flex-col items-center justify-start min-h-screen mb-40 md:my-16 px-8 gap-12">
+    <section className="flex flex-col items-center justify-start min-h-screen mb-40 pt-32 md:pt-24 px-8 gap-12">
       <div className="flex flex-col gap-3 w-full">
-        <h1 className="text-4xl font-bold">Jobs based on your profile</h1>
-        <p className="text-muted-foreground">
+        <h1 className="text-2xl md:text-4xl font-bold">Jobs based on your profile</h1>
+        <p className="text-base md:text-lg text-muted-foreground">
           We found some jobs that match your profile.
         </p>
       </div>

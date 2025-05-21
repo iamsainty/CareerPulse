@@ -13,17 +13,8 @@ const UserProfile = () => {
 
   return (
     <>
-      <aside className="h-screen sticky top-0 px-4 py-6 md:flex flex-col gap-4 justify-center items-center hidden">
+      <aside className="h-screen sticky top-0 px-4 py-6 md:flex flex-col gap-4 justify-center items-center hidden ">
         <div className="bg-white rounded-2xl shadow-xl w-full max-w-2xl mx-auto p-8 space-y-6">
-          <header className="space-y-1">
-            <p className="text-sm">
-              {loading ? (
-                <Skeleton className="w-64 h-4" />
-              ) : (
-                "Here’s a quick summary of your details."
-              )}
-            </p>
-          </header>
 
           {/* Info Section */}
           <section className="space-y-6">
@@ -83,22 +74,20 @@ const UserProfile = () => {
           </section>
 
           {/* Call-to-Action */}
-          <div className="pt-6 border-t border-muted">
-            <p className="text-sm mb-4">
-              {loading ? (
-                <Skeleton className="w-64 h-4" />
-              ) : (
-                "Update your profile to get more relevant job recommendations."
-              )}
-            </p>
-            <Button
-              onClick={() => router.push("/dashboard/edit-profile")}
-              className="w-full hover:shadow-md transition"
-              disabled={loading}
-            >
-              {loading ? <Skeleton className="w-24 h-5" /> : "Edit Profile"}
-            </Button>
-          </div>
+          <p className="text-sm mb-4">
+            {loading ? (
+              <Skeleton className="w-64 h-4" />
+            ) : (
+              "Update your profile to get more relevant job recommendations."
+            )}
+          </p>
+          <Button
+            onClick={() => router.push("/dashboard/edit-profile")}
+            className="w-full hover:shadow-md transition"
+            disabled={loading}
+          >
+            {loading ? <Skeleton className="w-24 h-5" /> : "Edit Profile"}
+          </Button>
         </div>
       </aside>
 

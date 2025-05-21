@@ -13,7 +13,7 @@ const userProfileRoutes = require("./routes/userProfile");
 const getJobsRoutes = require("./routes/getJobs");
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: ["https://career-pulse-portal.vercel.app", "http://localhost:3000"],
     credentials: true,
   })
 );

@@ -88,9 +88,9 @@ router.post("/get-ai-jobs", verifyToken, async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    const allJobs = await Job.find();
+    const allJobs = await Job.find({ jobType: user.jobType });
 
-    const limitedJobs = allJobs.slice(0, 20); // or use some filtering
+    const limitedJobs = allJobs.slice(0, 25);
 
     const prompt = `
 You are a job recommender AI.
@@ -124,18 +124,21 @@ Return only a valid JSON array of jobs using the format below:
 Return only the JSON. Do not include explanations, markdown, or any extra text.
 `;
 
-    const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
-      },
-      body: JSON.stringify({
-        model: "gpt-3.5-turbo",
-        messages: [{ role: "user", content: prompt }],
-        temperature: 0.7,
-      }),
-    });
+    const response = await fetch(
+      "https://openrouter.ai/api/v1/chat/completions",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
+        },
+        body: JSON.stringify({
+          model: "gpt-3.5-turbo",
+          messages: [{ role: "user", content: prompt }],
+          temperature: 0.7,
+        }),
+      }
+    );
 
     const data = await response.json();
 

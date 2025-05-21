@@ -5,7 +5,9 @@ import { useContext, createContext } from "react";
 const UserProfileContext = createContext();
 
 export const UserProfileProvider = ({ children }) => {
-  const serverUrl = "http://localhost:3001";
+  
+  // const serverUrl = "http://localhost:3001";
+  const serverUrl = "https://career-pulse-server.vercel.app";
 
   const updateProfile = async (
     name,

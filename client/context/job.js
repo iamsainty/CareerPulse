@@ -7,7 +7,8 @@ const JobContext = createContext();
 export const JobProvider = ({ children }) => {
   const [jobs, setJobs] = useState([]);
 
-  const serverUrl = "http://localhost:3001";
+  // const serverUrl = "http://localhost:3001";
+  const serverUrl = "https://career-pulse-server.vercel.app";
 
   useEffect(() => {
     fetchJobs();

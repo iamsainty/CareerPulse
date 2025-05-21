@@ -7,8 +7,9 @@ const userAuthContext = createContext();
 export const UserAuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
-  const serverUrl = "http://localhost:3001";
-
+  // const serverUrl = "http://localhost:3001";
+  const serverUrl = "https://career-pulse-server.vercel.app";
+  
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {

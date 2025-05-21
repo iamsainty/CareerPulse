@@ -5,15 +5,11 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import Link from "next/link";
 import React from "react";
 import { LuLogOut, LuMenu } from "react-icons/lu";
-import { useRouter } from "next/navigation";
 
 const Navbar = () => {
-  const router = useRouter();
-
   const handleSignOut = () => {
     localStorage.removeItem("token");
-    router.push("/signin");
-    router.refresh();
+    window.location.href = "/signin";
   };
 
   return (
@@ -36,7 +32,10 @@ const Navbar = () => {
           </Link>
         </ul>
 
-        <Button className="bg-blue-400 hover:bg-blue-600 text-white px-6 py-2 text-sm font-semibold rounded transition-colors cursor-pointer hidden md:flex" onClick={handleSignOut}>
+        <Button
+          className="bg-blue-400 hover:bg-blue-600 text-white px-6 py-2 text-sm font-semibold rounded transition-colors cursor-pointer hidden md:flex"
+          onClick={handleSignOut}
+        >
           Sign Out <LuLogOut className="ml-2" />
         </Button>
 
@@ -53,7 +52,10 @@ const Navbar = () => {
                 <Link href="/dashboard">Dashboard</Link>
                 <Link href="/dashboard/jobs">Jobs</Link>
                 <Link href="/dashboard/edit-profile">Edit Profile</Link>
-                <Button className="bg-blue-400 hover:bg-blue-600 text-white mt-4" onClick={handleSignOut}>
+                <Button
+                  className="bg-blue-400 hover:bg-blue-600 text-white mt-4"
+                  onClick={handleSignOut}
+                >
                   Sign Out <LuLogOut className="ml-2" />
                 </Button>
               </div>

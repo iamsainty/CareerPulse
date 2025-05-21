@@ -10,7 +10,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     if (!user) {
-      router.push("/signin");
+      window.location.href = "/signin";
     }
   }, [user, router]);
 

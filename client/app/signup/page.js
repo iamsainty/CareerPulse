@@ -13,7 +13,7 @@ export default function SignUp() {
 
   useEffect(() => {
     if (user) {
-      router.push("/dashboard");
+      window.location.href = "/dashboard";
     }
   }, [user, router]);
 
@@ -66,7 +66,7 @@ export default function SignUp() {
     const signupResponse = await signup(name, email, password);
     if (signupResponse === "Account created successfully") {
       toast.success("Account created successfully");
-      router.push("/dashboard");
+      window.location.href = "/signin";
     } else {
       toast.error(signupResponse);
     }

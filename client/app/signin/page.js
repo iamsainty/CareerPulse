@@ -49,8 +49,8 @@ export default function SignIn() {
 
     const signinResponse = await signin(email, password);
     if (signinResponse === "Signed in successfully") {
-      toast.success("Signed in successfully");
-      router.push("/dashboard");
+      toast.success("Signed in successfully hjh");
+      window.location.href = "/dashboard";
     } else {
       toast.error(signinResponse);
     }

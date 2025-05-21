@@ -11,6 +11,7 @@ const PORT = process.env.PORT || 3001;
 const userAuthRoutes = require("./routes/userAuth");
 const userProfileRoutes = require("./routes/userProfile");
 const getJobsRoutes = require("./routes/getJobs");
+
 app.use(
   cors({
     origin: ["https://career-pulse-portal.vercel.app", "http://localhost:3000"],
@@ -20,15 +21,22 @@ app.use(
 app.use(express.json());
 app.use(cookieParser());
 
-connectToMongo();
+connectToMongo()
+  .then(() => {
+    console.log("✅ Connected to MongoDB");
 
-app.use("/user-auth", userAuthRoutes);
-app.use("/user-profile", userProfileRoutes);
-app.use("/jobs", getJobsRoutes);
-app.get("/", (req, res) => {
-  res.send("Backend is running...");
-});
+    app.use("/user-auth", userAuthRoutes);
+    app.use("/user-profile", userProfileRoutes);
+    app.use("/jobs", getJobsRoutes);
 
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
-});
+    app.get("/", (req, res) => {
+      res.send("Backend is running...");
+    });
+
+    app.listen(PORT, () => {
+      console.log(`Server is running on http://localhost:${PORT}`);
+    });
+  })
+  .catch((err) => {
+    console.error("Failed to connect to MongoDB:", err);
+  });

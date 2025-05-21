@@ -1,7 +1,10 @@
-import React from "react";
+"use client";
+
+import React, { useEffect, useState } from "react";
 import { useUserAuth } from "@/context/userAuth";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
+import { Skeleton } from "@/components/ui/skeleton";
 import Image from "next/image";
 import heroImage from "@/public/dashboard-hero-image.png";
 import Link from "next/link";
@@ -11,6 +14,47 @@ import { FaUserEdit } from "react-icons/fa";
 
 const HeroSection = () => {
   const { user } = useUserAuth();
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Simulate loading for user fetching
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+      if (!user) {
+        window.location.href = "/signin";
+      }
+    }, 1250); // Optional delay to show skeleton
+
+    return () => clearTimeout(timer);
+  }, [user]);
+
+  if (isLoading) {
+    return (
+      <section className="container mx-auto px-4 sm:px-6 md:px-12 lg:px-20 min-h-screen py-10 flex flex-col-reverse md:flex-row items-center justify-center md:justify-between gap-10 md:gap-16">
+        {/* Left Section Skeleton */}
+        <div className="flex flex-col gap-6 w-full md:max-w-xl">
+          <Skeleton className="h-8 w-1/4" /> {/* Welcome text */}
+          <Skeleton className="h-14 w-1/2" /> {/* User name */}
+          <Skeleton className="h-20 w-full" /> {/* Description text */}
+          <div className="space-y-2 w-full max-w-xs sm:max-w-sm">
+            <Skeleton className="h-6 w-1/2" /> {/* Profile strength label */}
+            <Skeleton className="h-4 w-full" /> {/* Progress bar */}
+          </div>
+          <Skeleton className="h-10 w-full" /> {/* Profile status text */}
+          <div className="flex flex-wrap gap-3">
+            <Skeleton className="h-10 w-40" /> {/* Button 1 */}
+            <Skeleton className="h-10 w-52" /> {/* Button 2 (if shown) */}
+          </div>
+          <Skeleton className="h-16 w-full" /> {/* Tip box */}
+        </div>
+
+        {/* Right Section Skeleton (Image) */}
+        <div className="w-full md:w-auto hidden md:flex justify-center">
+          <Skeleton className="w-64 sm:w-80 md:w-[420px] h-[280px] rounded-md" />
+        </div>
+      </section>
+    );
+  }
 
   const totalFields = 5;
   let filledFields = 0;
@@ -24,7 +68,6 @@ const HeroSection = () => {
 
   const profileCompletion = (filledFields / totalFields) * 100;
   const isComplete = profileCompletion === 100;
-
   const getFirstName = (fullName) => fullName?.split(" ")[0] || "User";
 
   return (
@@ -65,17 +108,8 @@ const HeroSection = () => {
         <div className="flex flex-wrap justify-center md:justify-start gap-3 pt-3">
           <Link href="/dashboard/edit-profile" className="w-2/3 md:w-auto">
             <Button className="bg-blue-600 hover:bg-blue-700 text-white text-base w-full md:w-auto">
-              {isComplete ? (
-                <>
-                  <FaUserEdit />
-                  Update Profile
-                </>
-              ) : (
-                <>
-                  <FaUserEdit />
-                  Complete Profile
-                </>
-              )}
+              <FaUserEdit />
+              {isComplete ? "Update Profile" : "Complete Profile"}
             </Button>
           </Link>
           {isComplete && (

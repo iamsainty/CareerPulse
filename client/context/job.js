@@ -15,14 +15,15 @@ export const JobProvider = ({ children }) => {
 
   const fetchJobs = async () => {
     try {
-      const response = await fetch(`${serverUrl}/jobs/getJobs`, {
-        method: "GET",
+      const response = await fetch(`${serverUrl}/jobs/get-ai-jobs`, {
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
           token: localStorage.getItem("token"),
         },
       });
       const data = await response.json();
+      console.log("data", data);
       setJobs(data.jobs);
     } catch (error) {
       console.error("Error fetching jobs:", error);

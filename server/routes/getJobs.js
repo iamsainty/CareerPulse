@@ -3,6 +3,10 @@ const verifyToken = require("../middleware/verifyToken");
 const Job = require("../models/job");
 const User = require("../models/user");
 const router = express.Router();
+const fetch = require("node-fetch");
+const dotenv = require("dotenv");
+
+dotenv.config();
 
 // Function to calculate score based on user-job match
 function getJobScore(job, user) {
@@ -72,6 +76,81 @@ router.get("/getJobs", verifyToken, async (req, res) => {
   } catch (error) {
     console.error("Error fetching jobs:", error);
     res.status(500).json({ error: "Failed to fetch jobs" });
+  }
+});
+
+router.post("/get-ai-jobs", verifyToken, async (req, res) => {
+  try {
+    const userId = req.user.userId;
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const allJobs = await Job.find();
+
+    const limitedJobs = allJobs.slice(0, 20); // or use some filtering
+
+    const prompt = `
+You are a job recommender AI.
+You are given a user's profile and must recommend exactly 3 jobs that best suit them.
+
+User Profile:
+Name: ${user.name}
+Email: ${user.email}
+Location: ${user.location}
+Job Type: ${user.jobType}
+Experience: ${user.experienceInYears} years
+Skills: ${user.skills.join(", ")}
+
+All Jobs: ${JSON.stringify(limitedJobs)}
+
+Return only a valid JSON array of jobs using the format below:
+[
+  {
+    "jobTitle": "string",
+    "companyName": "string",
+    "salary": "number",
+    "location": "string",
+    "skills": ["string", "string", "string"],
+    "jobType": "string",
+    "experienceInYears": "number",
+    "description": "string",
+    "postedAt": "date"
+  }
+]
+
+Return only the JSON. Do not include explanations, markdown, or any extra text.
+`;
+
+    const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+      },
+      body: JSON.stringify({
+        model: "gpt-3.5-turbo",
+        messages: [{ role: "user", content: prompt }],
+        temperature: 0.7,
+      }),
+    });
+
+    const data = await response.json();
+
+    if (!data.choices || !data.choices[0]?.message?.content) {
+      return res
+        .status(500)
+        .json({ error: "Invalid response from OpenAI", raw: data });
+    }
+
+    const jobs = JSON.parse(data.choices[0].message.content);
+
+    res.status(200).json({ jobs });
+  } catch (error) {
+    console.error("Error fetching jobs:", error);
+    res.status(500).json({ error: "Failed to fetch jobs", details: error });
   }
 });
 

@@ -46,10 +46,10 @@ const JobListing = () => {
               <div className="flex items-start justify-between">
                 <div>
                   <CardTitle className="text-xl font-semibold text-foreground">
-                    {job.title}
+                    {job.jobTitle}
                   </CardTitle>
                   <CardDescription className="text-sm text-muted-foreground mt-0.5">
-                    {job.company}
+                    {job.companyName}
                   </CardDescription>
                 </div>
                 <Badge variant="outline" className="text-xs rounded-md">

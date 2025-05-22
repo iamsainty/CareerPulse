@@ -72,14 +72,16 @@ const UserProfile = () => {
             )}
           </section>
 
-          {/* Call-to-Action */}
-          <p className="text-sm mb-4">
-            {loading ? (
+          {loading ? (
+            <div className="mb-4">
               <Skeleton className="w-64 h-4" />
-            ) : (
-              "Update your profile to get more relevant job recommendations."
-            )}
-          </p>
+            </div>
+          ) : (
+            <p className="text-sm mb-4">
+              Update your profile to get more relevant job recommendations.
+            </p>
+          )}
+
           <Button
             onClick={() => router.push("/dashboard/edit-profile")}
             className="w-full hover:shadow-md transition"
@@ -90,15 +92,18 @@ const UserProfile = () => {
         </div>
       </aside>
 
-      {/* Mobile Bottom CTA */}
-      <div className="md:hidden fixed bottom-0 w-full bg-white p-6 rounded-t-4xl shadow-[0_-4px_20px_rgba(0,0,0,0.2)]">
-        <p className="text-sm text-center mb-3">
-          {loading ? (
+      <div className="md:hidden z-10 fixed bottom-0 w-full bg-white p-6 rounded-t-4xl shadow-[0_-4px_20px_rgba(0,0,0,0.2)]">
+        {loading ? (
+          <div className="text-sm text-center mb-3">
             <Skeleton className="w-full h-4 mx-auto" />
-          ) : (
-            "Job recommendations are tailored to your profile. Update it to receive more accurate matches."
-          )}
-        </p>
+          </div>
+        ) : (
+          <p className="text-sm text-center mb-3">
+            Job recommendations are tailored to your profile. Update it to
+            receive more accurate matches.
+          </p>
+        )}
+
         <Button
           onClick={() => router.push("/dashboard/edit-profile")}
           className="w-full font-medium"

@@ -133,9 +133,8 @@ Return only the JSON. Do not include explanations, markdown, or any extra text.
           Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
         },
         body: JSON.stringify({
-          model: "gpt-3.5-turbo",
+          model: "deepseek/deepseek-r1:free",
           messages: [{ role: "user", content: prompt }],
-          temperature: 0.7,
         }),
       }
     );

@@ -26,6 +26,7 @@ export const JobProvider = ({ children }) => {
       const data = await response.json();
       console.log("data", data);
       setJobs(data.jobs);
+      return data;
     } catch (error) {
       console.error("Error fetching jobs:", error);
     }

@@ -15,7 +15,6 @@ const UserProfile = () => {
     <>
       <aside className="h-screen sticky top-0 px-4 py-6 md:flex flex-col gap-4 justify-center items-center hidden ">
         <div className="bg-white rounded-2xl shadow-xl w-full max-w-2xl mx-auto p-8 space-y-6">
-
           {/* Info Section */}
           <section className="space-y-6">
             {[
@@ -35,13 +34,13 @@ const UserProfile = () => {
                 <h2 className="text-xs font-semibold uppercase tracking-wide">
                   {item.label}
                 </h2>
-                <p className="text-base text-muted-foreground">
-                  {loading ? (
-                    <Skeleton className="w-40 h-5" />
-                  ) : (
-                    item.value || "N/A"
-                  )}
-                </p>
+                {loading ? (
+                  <Skeleton className="w-40 h-5" />
+                ) : (
+                  <p className="text-base text-muted-foreground">
+                    {item.value || "N/A"}
+                  </p>
+                )}
               </div>
             ))}
           </section>
